@@ -1,10 +1,10 @@
 --[[
-Create a clone of the iron-chest.
+Create a clone of the logistic buffer-chest that we can periodically service.
 ]]
 local constants = require "src.constants"
 
 local name = constants.CHEST_NAME
-local source_item_name = "requester-chest"
+local source_item_name = "buffer-chest"
 local source_prototype = "logistic-container"
 
 local entity = table.deepcopy(data.raw[source_prototype][source_item_name])

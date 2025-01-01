@@ -77,15 +77,22 @@ Upgrade the quality of items to legendary.
 ]]
 local function service_chests()
 
+  local best_quality
+
   while true do
     local info = GlobalState.entity_next()
     if not info then
       -- end of the list for this tick
       return
     end
-    if info.quality then
-      service_chest(info)
+    if info.quality == nil then
+      if best_quality == nil then
+        local ql = GlobalState.get_quality_list()
+        best_quality = ql[#ql]
+      end
+      info.quality = best_quality.name
     end
+    service_chest(info)
   end
 end
 

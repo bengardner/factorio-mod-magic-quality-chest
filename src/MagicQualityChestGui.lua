@@ -37,13 +37,16 @@ end
 local function get_quality_info(unit_number)
   local data = GlobalState.entity_get_data(unit_number)
   local ql = GlobalState.get_quality_list()
-  local sel_idx = 1 -- normal
+  local sel_idx = 0 -- normal
   local items = {}
   for idx, qq in ipairs(ql) do
     table.insert(items, qq.localised_name)
     if qq.name == data.quality then
       sel_idx = idx
     end
+  end
+  if sel_idx == 0 then
+    sel_idx = #ql
   end
   return items, sel_idx
 end
