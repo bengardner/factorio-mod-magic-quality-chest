@@ -37,6 +37,7 @@ function M.entity_register(entity)
       end
 
       M.entity_queue(info)
+      return info
     end
   end
 end
@@ -92,7 +93,7 @@ function M.entity_next()
   end
 end
 
-local quality_cache = {} -- key=selected_index, val=localised_name
+local quality_cache = {} -- key=selected_index, val=LuaQualityPrototype
 function M.get_quality_list()
   if #quality_cache == 0 then
     -- this is the first call, so gather the qualities and sort by level
@@ -109,6 +110,7 @@ function M.get_quality_list()
       table.insert(quality_cache, qq)
     end
   end
+
   return quality_cache
 end
 

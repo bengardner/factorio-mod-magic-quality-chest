@@ -9,7 +9,7 @@ local GUI_SELBOX_NAME = GUI_CONTAINER_NAME .. "-selbox"
 
 local lib = {}
 
--- destory the GUI
+-- destroy the GUI
 local function close_gui(player)
   local window = player.gui.relative[GUI_CONTAINER_NAME]
   if window then
@@ -37,27 +37,33 @@ end
 local function get_quality_info(unit_number)
   local data = GlobalState.entity_get_data(unit_number)
   local ql = GlobalState.get_quality_list()
-  local sel_idx = 0 -- normal
+  local sel_idx = 1 -- disabled
   local items = {}
+  table.insert(items, "Disabled")
   for idx, qq in ipairs(ql) do
     table.insert(items, qq.localised_name)
     if qq.name == data.quality then
-      sel_idx = idx
+      sel_idx = idx + 1
     end
-  end
-  if sel_idx == 0 then
-    sel_idx = #ql
   end
   return items, sel_idx
 end
 
 -- update the quality for the chest by selected_index
 local function update_quality_by_index(unit_number, selected_index)
-  local ql = GlobalState.get_quality_list()
-  local qq = ql[selected_index]
   --log(("selbox %s %s"):format(selected_index, qq.name))
   local data = GlobalState.entity_get_data(unit_number)
-  data.quality = qq.name
+  if data then
+    if selected_index == 1 then
+      data.quality = nil
+      --log(("updated %s to %s"):format(serpent.line(data), "disabled"))
+    else
+      local ql = GlobalState.get_quality_list()
+      local qq = ql[selected_index - 1]
+      --log(("updated %s to %s"):format(serpent.line(data), qq.name))
+      data.quality = qq.name
+    end
+  end
 end
 
 -- create the side GUI
@@ -84,6 +90,7 @@ local function on_gui_opened(event)
     tags = { entity_id = entity.unit_number }
   })
   local items, selected_index = get_quality_info(entity.unit_number)
+  --log(("GUI %s sel %s"):format(serpent.line(items), selected_index))
   window.add({
     name=GUI_SELBOX_NAME,
     type="drop-down",
